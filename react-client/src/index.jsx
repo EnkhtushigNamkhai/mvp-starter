@@ -37,8 +37,7 @@ class App extends React.Component {
 
   postNavHandler() {
     console.log('HANDLE THE Post HERE');
-
-   //this.setState({page: 'Post'});
+    this.setState({page: 'Post'});
   }
 
   analyzeNavHandler() {
@@ -46,7 +45,7 @@ class App extends React.Component {
     this.setState({page: 'Analyze'});
   }
 
- 
+
 
 
 
@@ -54,10 +53,11 @@ class App extends React.Component {
     //if first time
     return (<div>
       <h1>MY APP</h1>
-      <p onClick={this.timeLineNavHandler.bind(this)}>TimeLine</p>
-      <p onClick={this.postNavHandler.bind(this)}>Post</p>
-      <p onClick={this.analyzeNavHandler.bind(this)}>Analyze</p>
-      
+      <div className='menu'>
+        <span className='menuItem' onClick={this.timeLineNavHandler.bind(this)}>TimeLine</span>
+        <span className='menuItem' onClick={this.postNavHandler.bind(this)}>Post</span>
+        <span className='menuItem' onClick={this.analyzeNavHandler.bind(this)}>Analyze</span>
+      </div>
  
       {(() => {
         console.log('page ', this.state.page);

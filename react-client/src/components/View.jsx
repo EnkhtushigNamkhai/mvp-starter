@@ -1,5 +1,6 @@
 import React from 'react';
 import Analyze from './Analyze.jsx';
+import Post from './Post.jsx';
 //redirects which view the user clicked to see
 class View extends React.Component {
   constructor(props) {
@@ -13,12 +14,15 @@ class View extends React.Component {
       console.log('Will render Analyze!');
       return  (
         <div>
-          <h1>ANALYZE PAGE</h1>
-          <Analyze />
+          <Analyze/>
         </div>)
     } else if (this.props.pageType === 'Post') {
       console.log('Will render Post!');
-      return null;
+      return (
+        <div>
+          <Post/>
+        </div>
+      )
     } else if (this.props.pageType === 'TimeLine') {
       console.log('Will render TimeLine!');
       return null;

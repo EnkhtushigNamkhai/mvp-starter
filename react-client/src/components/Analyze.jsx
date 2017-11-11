@@ -7,8 +7,14 @@ class Analyze extends React.Component {
     super(props)
     this.state = {
       score: 0,
-      content: ''
+      content: '',
+      extraversion: 0.5,
+      agreeableness: 0.5,
+      conscientiousness: 0.5,
+      openness: 0.5
     }
+    //t//his.testVar = String(this.state.extraversion * 100) + '%';
+    //console.log('testVar', this.testVar);
   }
 
   getTextVal(e) {
@@ -17,37 +23,80 @@ class Analyze extends React.Component {
   }
 
   analyzeClicked() {
-    console.log('THE BUTTON WAS CLICKED!');
+    console.log('ANALYZE BUTTON WAS CLICKED!');
     //make a get request to the server here and just change the state here
-    var obj = {
-      url: '/analyze',
-      method: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({content: this.state.content}),
-      success: function(data) {
-        console.log('sucessful get! yyaaayyy!! :D', data);
-        //edit the data and make the loading bar update according to data value
-        
+    if (this.state.content === '') {
 
+    } else {
+      var obj = {
+        url: '/analyze',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({content: this.state.content}),
+        success: function(data) {
+          console.log('sucessful get! yyaaayyy!! :D', data);
+          //edit the data and make the loading bar update according to data value
 
-        this.setState({score: data});
-      }.bind(this),
-      error: function(err) {
-        console.log('THERE IS AN ERRORRR :/');
+          var obj = JSON.parse(data);
+
+          this.setState(
+          {score: obj.score,
+           extraversion: obj.extraversion,
+           agreeableness: obj.agreeableness,
+           conscientiousness: obj.conscientiousness,
+           openness: obj.openness
+          });
+        }.bind(this),
+        error: function(err) {
+          console.log('THERE IS AN ERRORRR :/');
+        }
       }
+      $.ajax(obj);
     }
-    $.ajax(obj);
-  }
+  }  
+  
 
   render() {
     return (
     <div className='center'>
-      <textarea onChange={this.getTextVal.bind(this)}></textarea>
-      <div>Here the results will be DISPLAYED
-        <p>{this.state.score}</p>
-        
+      <textarea className='textArea' onChange={this.getTextVal.bind(this)}></textarea>
+      <div>
+        <p>score: {this.state.score}</p>
+      
+        <div className="wrapper">
+          <div>
+            <p>Extraversion: </p>
+            <div id="myProgress">
+              <div id="myBar" style={{width: String(this.state.extraversion * 100) + '%'}}></div>
+            </div>
+          </div>
+
+          <div>
+            <p>Agreeableness: </p>
+            <div id="myProgress">
+              <div id="myBar" style={{width: String(this.state.agreeableness * 100) + '%'}}></div>
+            </div>
+          </div>
+
+          <div>
+            <p>Conscientiousness: </p>
+            <div id="myProgress">
+              <div id="myBar" style={{width: String(this.state.conscientiousness * 100) + '%'}}></div>
+            </div>
+          </div>
+
+          <div>
+            <p>Openness: </p>
+            <div id="myProgress">
+              <div id="myBar" style={{width: String(this.state.openness * 100) + '%'}}></div>
+            </div>
+          </div>
+
+        </div>
+         <button onClick={this.analyzeClicked.bind(this)}>Analyze</button>
       </div>
-      <button onClick={this.analyzeClicked.bind(this)}>Analyze</button>
+
+     
     </div>
     )
   }
@@ -62,3 +111,19 @@ export default Analyze;
 //         </div>
 
 // <h4> HERE IS ANALYZE PAGE DISPLAYED! </h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,10 +1,71 @@
 body {
   text-align: center;
+  position: relative;
 }
 
 .center {
   text-align: center;
 }
-.progress {
-  width: 30%;
+
+.textArea {
+  width:50%;
+  height: 200px;
+  margin:20px;
+  border-radius: 5px;
 }
+
+h1 {
+  /*background-color: yellow;*/
+}
+
+.menuItem {
+  font-size: 20px;
+  background-color: green;
+  padding:20px;
+  margin: 1px;
+  cursor: pointer;
+}
+
+
+.menu {
+  margin-top: 10px;
+  padding: 30px;
+ /* background-color: red;*/
+  height: 100px;
+}
+
+.wrapper {
+ /* background-color: red;*/
+  width: 30%;
+  left: 35%;
+  position: absolute;
+  padding: 10px;
+  margin-top: 40px;
+  margin-bottom: 100px;
+}
+
+#myProgress {
+  border-radius: 5px;
+  margin-top: 10px;
+  width: 100%;
+  background-color: #ddd;
+}
+
+#myBar {
+  border-radius: 5px;
+  width: 50%;
+  height: 30px;
+  background-color: green;
+  animation-duration: 5s;
+}
+
+button {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+
+}
+
+
+

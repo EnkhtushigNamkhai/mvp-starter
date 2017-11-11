@@ -4,7 +4,9 @@ var items = require('../database-mongo');
 var request = require('request');
 let https = require ('https');
 var indico = require('indico.io');
-indico.apiKey =  'acda2ec8ced0e5b59433bc2f57830ce3';
+var config = require('../config.js');
+
+indico.apiKey = config.TOKEN;
 
 
 var app = express();
@@ -22,26 +24,68 @@ app.use(bodyParser.json());
 
 //analyze page does not have to save anything in database, just make a get Req to API 
 app.post('/analyze', function (req, res) {
-  console.log('YAYYY MAKING A POST REQUEST TO THE SERVER FROM ANALYZE!');
+  console.log('MAKING A POST REQUEST TO THE SERVER FROM ANALYZE!');
   console.log('should be content : ', req.body.content);
 
 
   indico.sentiment(req.body.content)
-  .then(function(data) {
-    res.end(JSON.stringify(data));
+  .then(function(score) {
+    
 
-    // indico.personality("I love my friends")
-    // .then(function(res) {
-    //   console.log(res);
-    // })
-    // .catch(function(err) {
-    //   console.log(err);
-    // });
+    indico.personality(req.body.content)
+    .then(function(personality) {
+      
+      personality.score = score;
+
+      res.end(JSON.stringify(personality));
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
   })
   .catch(function(err) {
     console.log(err);
   });
-  //res.send('success');
+
+});
+
+app.post('/post', function (req, res) {
+  console.log('MAKING A POST REQUEST TO SERVER FROM POST');
+ 
+  indico.sentiment(req.body.content)
+  .then(function(score) {
+    indico.emotion(req.body.content)
+    .then(function(emotion) {
+      emotion.score = score;
+
+        indico.personas(req.body.content, {top_n: 3})
+        .then(function(persona) {
+          console.log('RESULT OF EMOTIONS: ', emotion);
+          console.log('RESULT OF PERSONAS : ', persona);
+
+
+          var obj = {persona: persona, emotion: emotion, sentiment: score}
+          res.end(JSON.stringify(JSON.stringify(obj)));
+          //save to database here...
+          // db.save(personality);          
+          
+
+          // console.log(score, emotion, personality);
+          
+        });
+
+      
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+  })
+
+
+
+
+  // indico.personas(req.body.content)
+
 });
 
 app.get('/items', function (req, res) {
