@@ -1,5 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
+import EmotionElement from './EmotionElement.jsx';
+import PersonaElement from './PersonaElement.jsx';
 // import ListItem from './ListItem.jsx';
 
 class Analyze extends React.Component {
@@ -8,13 +10,16 @@ class Analyze extends React.Component {
     this.state = {
       score: 0,
       content: '',
-      extraversion: 0.5,
-      agreeableness: 0.5,
-      conscientiousness: 0.5,
-      openness: 0.5
+
+      emotion: {
+        anger: 0,
+        surprise: 0,
+        fear: 0,
+        sadness: 0,
+        joy: 0,
+      },
+      persona: {},
     }
-    //t//his.testVar = String(this.state.extraversion * 100) + '%';
-    //console.log('testVar', this.testVar);
   }
 
   getTextVal(e) {
@@ -23,94 +28,73 @@ class Analyze extends React.Component {
   }
 
   analyzeClicked() {
-    console.log('ANALYZE BUTTON WAS CLICKED!');
     //make a get request to the server here and just change the state here
-    if (this.state.content === '') {
-
+    if (this.state.content !== '') {
+      this.makeRequest('/analyze');
     } else {
-      var obj = {
-        url: '/analyze',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({content: this.state.content}),
-        success: function(data) {
-          console.log('sucessful get! yyaaayyy!! :D', data);
-          //edit the data and make the loading bar update according to data value
-
-          var obj = JSON.parse(data);
-
-          this.setState(
-          {score: obj.score,
-           extraversion: obj.extraversion,
-           agreeableness: obj.agreeableness,
-           conscientiousness: obj.conscientiousness,
-           openness: obj.openness
-          });
-        }.bind(this),
-        error: function(err) {
-          console.log('THERE IS AN ERRORRR :/');
-        }
-      }
-      $.ajax(obj);
+      alert('Please write in the text field.');
     }
   }  
   
+  postClicked() {
+    console.log('POST CLICKED');
+    //make a post request to the server with the content
+    //to route /post
+
+    //the only difference is the route and also we want it stored in database
+    if (this.state.content !== '') {
+      this.makeRequest('/post');
+    } else {
+      alert('Please write in the text field.');
+    }
+  }
+
+  makeRequest(path) {
+    var obj = {
+      url: path,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({content: this.state.content}),
+      success: function(data) {
+        console.log('sucessful get! yyaaayyy!! :D', data);
+        //edit the data and make the loading bar update according to data value
+
+        var obj = JSON.parse(data);
+        console.log(obj.emotion);
+
+        this.setState(
+        {score: obj.sentiment,
+         emotion: obj.emotion,
+         persona: obj.persona,
+        });
+      }.bind(this),
+      error: function(err) {
+        console.log('THERE IS AN ERRORRR :/');
+      }
+    }
+    $.ajax(obj);
+  }
+
 
   render() {
+    {console.log('HERE:' , this.state.emotion) }
     return (
     <div className='center'>
       <textarea className='textArea' onChange={this.getTextVal.bind(this)}></textarea>
       <div>
         <p>score: {this.state.score}</p>
-      
-        <div className="wrapper">
-          <div>
-            <p>Extraversion: </p>
-            <div id="myProgress">
-              <div id="myBar" style={{width: String(this.state.extraversion * 100) + '%'}}></div>
-            </div>
-          </div>
-
-          <div>
-            <p>Agreeableness: </p>
-            <div id="myProgress">
-              <div id="myBar" style={{width: String(this.state.agreeableness * 100) + '%'}}></div>
-            </div>
-          </div>
-
-          <div>
-            <p>Conscientiousness: </p>
-            <div id="myProgress">
-              <div id="myBar" style={{width: String(this.state.conscientiousness * 100) + '%'}}></div>
-            </div>
-          </div>
-
-          <div>
-            <p>Openness: </p>
-            <div id="myProgress">
-              <div id="myBar" style={{width: String(this.state.openness * 100) + '%'}}></div>
-            </div>
-          </div>
-
-        </div>
-         <button onClick={this.analyzeClicked.bind(this)}>Analyze</button>
+        <EmotionElement emotionObj={this.state.emotion}/>
+        <PersonaElement personaObj={this.state.persona}/>
+       
+        <button onClick={this.analyzeClicked.bind(this)}>Analyze</button>
+        <button onClick={this.postClicked.bind(this)}>Post</button>
       </div>
-
-     
     </div>
     )
   }
 }
 
 export default Analyze;
-
-// <div className="progress">
-//           <div className="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style={{width: '90%'}}>
-//             <span className="sr-only">70% Complete</span>
-//           </div>
-//         </div>
-
-// <h4> HERE IS ANALYZE PAGE DISPLAYED! </h4>
 
 
 

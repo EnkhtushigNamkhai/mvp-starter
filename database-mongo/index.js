@@ -8,16 +8,33 @@ db.on('error', function() {
 });
 
 db.once('open', function() {
-
   console.log('mongoose connected successfully');
 });
 
 var itemSchema = mongoose.Schema({
   content: String,
-  happinessIndex: String
+  score: Number
 });
 
 var Item = mongoose.model('Item', itemSchema);
+
+  // Item.save(); on an object instance
+  //{content: , score: }
+var save = function(content, data, callback) {
+  console.log('save');
+
+  var obj = JSON.parse(data);
+
+  console.log(typeof obj);
+  var instance = new Item({content: content, score: obj.sentiment});
+  instance.save(function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Done with saving to database');
+    }
+  });
+}
 
 var selectAll = function(callback) {
   Item.find({}, function(err, items) {
@@ -29,4 +46,5 @@ var selectAll = function(callback) {
   });
 };
 
+module.exports.save = save;
 module.exports.selectAll = selectAll;

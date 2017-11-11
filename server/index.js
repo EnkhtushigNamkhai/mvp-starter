@@ -11,81 +11,56 @@ indico.apiKey = config.TOKEN;
 
 var app = express();
 
-// app.get('/', function (req, res, next) {
-//   console.log('REQ URL: ', req.url);
-//   console.log('goes here');
-//   next();
-// });
-// UNCOMMENT FOR REACT
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
 
+function fetch(content, callback) {
+  indico.sentiment(content)
+    .then(function(score) {
+      indico.emotion(content)
+      .then(function(emotion) {
+        emotion.score = score;
 
+        indico.personas(content, {top_n: 3})
+        .then(function(persona) {
+          var obj = {'persona': persona, 'emotion': emotion, 'sentiment': score}
+          
+          callback(null, JSON.stringify(obj));
+        }); 
+    })
+    .catch(function(err) {
+      callback(err, null);
+    });
+  })
+}
 
 //analyze page does not have to save anything in database, just make a get Req to API 
 app.post('/analyze', function (req, res) {
   console.log('MAKING A POST REQUEST TO THE SERVER FROM ANALYZE!');
   console.log('should be content : ', req.body.content);
 
-
-  indico.sentiment(req.body.content)
-  .then(function(score) {
-    
-
-    indico.personality(req.body.content)
-    .then(function(personality) {
-      
-      personality.score = score;
-
-      res.end(JSON.stringify(personality));
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
-  })
-  .catch(function(err) {
-    console.log(err);
+  fetch(req.body.content, function(err, data) {
+    if (err) {
+      console.log("NOOOO");
+    } else {
+      res.end(data);
+    }
   });
-
 });
 
 app.post('/post', function (req, res) {
   console.log('MAKING A POST REQUEST TO SERVER FROM POST');
- 
-  indico.sentiment(req.body.content)
-  .then(function(score) {
-    indico.emotion(req.body.content)
-    .then(function(emotion) {
-      emotion.score = score;
+  //posting content 
+  fetch(req.body.content, function(err, data) {
+    if (err) {
+      console.log("NOOOO");
+    } else {
+      //save the data to the database...
+      items.save(req.body.content, data);
 
-        indico.personas(req.body.content, {top_n: 3})
-        .then(function(persona) {
-          console.log('RESULT OF EMOTIONS: ', emotion);
-          console.log('RESULT OF PERSONAS : ', persona);
-
-
-          var obj = {persona: persona, emotion: emotion, sentiment: score}
-          res.end(JSON.stringify(JSON.stringify(obj)));
-          //save to database here...
-          // db.save(personality);          
-          
-
-          // console.log(score, emotion, personality);
-          
-        });
-
-      
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
-  })
-
-
-
-
-  // indico.personas(req.body.content)
-
+      res.end(data);
+    }
+  });
 });
 
 app.get('/items', function (req, res) {
@@ -103,6 +78,8 @@ app.get('/items', function (req, res) {
 app.listen(3000, function() {
   console.log('listening on port 3000!');
 });
+
+
 
   //with microsoft azure text sentiment
   // var dataObj = 

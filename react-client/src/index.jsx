@@ -30,15 +30,16 @@ class App extends React.Component {
 
   timeLineNavHandler() {
     console.log('HANDLE THE timeline HERE');
-    
+    //make a get request to the server and retrieve data from the database.
 
     //this.setState({page: 'TimeLine'});
   }
 
-  postNavHandler() {
-    console.log('HANDLE THE Post HERE');
-    this.setState({page: 'Post'});
-  }
+  // postNavHandler() {
+  //   console.log('HANDLE THE Post HERE');
+  //   this.setState({page: 'Post'});
+  //   <span className='menuItem' onClick={this.postNavHandler.bind(this)}>Post</span>
+  // }
 
   analyzeNavHandler() {
     console.log('HANDLE THE Analyze HERE');
@@ -52,10 +53,9 @@ class App extends React.Component {
   render () {
     //if first time
     return (<div>
-      <h1>MY APP</h1>
+      <h1>Text Analysis</h1>
       <div className='menu'>
         <span className='menuItem' onClick={this.timeLineNavHandler.bind(this)}>TimeLine</span>
-        <span className='menuItem' onClick={this.postNavHandler.bind(this)}>Post</span>
         <span className='menuItem' onClick={this.analyzeNavHandler.bind(this)}>Analyze</span>
       </div>
  
