@@ -10,49 +10,53 @@ class App extends React.Component {
     super(props);
     this.state = { 
       items: [],
-      page: ''
+      page: '',
+      timeLine: []
     }
   }
-
-  // componentDidMount() {
-  //   $.ajax({
-  //     url: '/items', 
-  //     success: (data) => {
-  //       this.setState({
-  //         items: data
-  //       })
-  //     },
-  //     error: (err) => {
-  //       console.log('err', err);
-  //     }
-  //   });
-  // }
 
   timeLineNavHandler() {
     console.log('HANDLE THE timeline HERE');
     //make a get request to the server and retrieve data from the database.
+    this.makeRequest('/timeline', function (data) {
+      console.log('DATA FROM THE DATABASE: ', data);
 
-    //this.setState({page: 'TimeLine'});
+      this.setState({page: 'TimeLine', timeLine: JSON.parse(data)});
+
+    }.bind(this));
   }
-
-  // postNavHandler() {
-  //   console.log('HANDLE THE Post HERE');
-  //   this.setState({page: 'Post'});
-  //   <span className='menuItem' onClick={this.postNavHandler.bind(this)}>Post</span>
-  // }
 
   analyzeNavHandler() {
     console.log('HANDLE THE Analyze HERE');
     this.setState({page: 'Analyze'});
   }
 
+  showSideMenu() {
+    console.log('showsideMenu');
+    show = true;
+  }
 
-
+  makeRequest(path, callback) {
+    var obj = {
+      url: path,
+      method: 'GET',
+      contentType: 'application/json',
+      success: function(data) {
+        console.log('sucessful get! yyaaayyy!! :D', data);
+        callback(data);
+      }.bind(this),
+      error: function(err) {
+        console.log('THERE IS AN ERRORRR :/');
+      }
+    }
+    $.ajax(obj);
+  }
 
 
   render () {
     //if first time
     return (<div>
+      <button className='hamburgerBar' onClick={this.showSideMenu}></button>
       <h1>Text Analysis</h1>
       <div className='menu'>
         <span className='menuItem' onClick={this.timeLineNavHandler.bind(this)}>TimeLine</span>
@@ -62,7 +66,7 @@ class App extends React.Component {
       {(() => {
         console.log('page ', this.state.page);
         switch (this.state.page.length !== 0) {
-          case true: return <View pageType={this.state.page}/>;
+          case true: return <View pageType={this.state.page} timeline={this.state.timeLine}/>;
         }
       })()}
 

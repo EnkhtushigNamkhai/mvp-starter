@@ -13,7 +13,8 @@ db.once('open', function() {
 
 var itemSchema = mongoose.Schema({
   content: String,
-  score: Number
+  score: Number,
+  date: String
 });
 
 var Item = mongoose.model('Item', itemSchema);
@@ -25,8 +26,24 @@ var save = function(content, data, callback) {
 
   var obj = JSON.parse(data);
 
-  console.log(typeof obj);
-  var instance = new Item({content: content, score: obj.sentiment});
+
+  var today = new Date();
+  var day = today.getDate();
+  var month = today.getMonth() + 1; //January is 0!
+  var year = today.getFullYear();
+
+  if (day < 10) {
+    day = '0' + day; 
+  }
+
+  if (month < 10) {
+    month = '0' + month;
+  }
+  var dateStr = month + '/' + day + '/' + year;
+  console.log(dateStr);
+
+
+  var instance = new Item({content: content, score: obj.sentiment, date: dateStr});
   instance.save(function(err) {
     if (err) {
       console.log(err);
