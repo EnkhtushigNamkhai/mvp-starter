@@ -18,7 +18,7 @@ class Analyze extends React.Component {
         sadness: 0,
         joy: 0,
       },
-      persona: {},
+      persona: [],
     }
   }
 
@@ -62,10 +62,17 @@ class Analyze extends React.Component {
         var obj = JSON.parse(data);
         console.log(obj.emotion);
 
+        var result = []
+        for (var key in obj.persona) {
+          result.push([key, obj.persona[key]]);
+        }
+
+
+
         this.setState(
         {score: obj.sentiment,
          emotion: obj.emotion,
-         persona: obj.persona,
+         persona: result,
         });
       }.bind(this),
       error: function(err) {
@@ -82,9 +89,9 @@ class Analyze extends React.Component {
     <div className='center'>
       <textarea className='textArea' onChange={this.getTextVal.bind(this)}></textarea>
       <div>
-        <p>score: {this.state.score}</p>
+        <p>Positivity: {String(parseInt(this.state.score * 100)) + '%'}</p>
         <EmotionElement emotionObj={this.state.emotion}/>
-        <PersonaElement personaObj={this.state.persona}/>
+        <PersonaElement personaArr={this.state.persona}/>
        
         <button onClick={this.analyzeClicked.bind(this)}>Analyze</button>
         <button onClick={this.postClicked.bind(this)}>Post</button>

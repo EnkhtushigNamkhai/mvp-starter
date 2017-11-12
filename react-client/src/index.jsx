@@ -60,6 +60,7 @@ class App extends React.Component {
       <h1>Text Analysis</h1>
       <div className='menu'>
         <span className='menuItem' onClick={this.timeLineNavHandler.bind(this)}>TimeLine</span>
+        <span className='menuItem'>Graph</span>
         <span className='menuItem' onClick={this.analyzeNavHandler.bind(this)}>Analyze</span>
       </div>
  
