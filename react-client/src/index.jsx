@@ -31,7 +31,7 @@ class App extends React.Component {
 
     this.makeRequest('/graph', function (data) {
       console.log('DATA FROM THE DATABASE: ', data);
-
+      
       this.setState({page: 'Graph', timeLine: JSON.parse(data)});
 
     }.bind(this));

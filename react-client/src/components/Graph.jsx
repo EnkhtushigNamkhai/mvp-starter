@@ -8,9 +8,21 @@ class Graph extends React.Component {
   componentDidMount() {
 
     var dataP = [];
+
+    var obj = {};
     this.props.resultArr.forEach(function(record) {
-      dataP.push({y: (parseInt(record.score * 100)), label: record.date});
+      if (obj[record.date] === undefined) {
+        obj[record.date] = [record.score, 1];
+      } else {
+        obj[record.date][0] += record.score;
+        obj[record.date][1] += 1;
+      }
     });
+
+    for (var date in obj) {
+      var score = obj[date][0]/obj[date][1];
+      dataP.push({y: (parseInt(score * 100)), label: date});
+    }
 
     var chart = new CanvasJS.Chart("chartContainer", {
     animationEnabled: true,

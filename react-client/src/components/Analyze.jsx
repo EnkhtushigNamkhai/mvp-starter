@@ -30,7 +30,9 @@ class Analyze extends React.Component {
   analyzeClicked() {
     //make a get request to the server here and just change the state here
     if (this.state.content !== '') {
+      
       this.makeRequest('/analyze');
+      //this.setState({content: ''});
     } else {
       alert('Please write in the text field.');
     }
@@ -43,7 +45,10 @@ class Analyze extends React.Component {
 
     //the only difference is the route and also we want it stored in database
     if (this.state.content !== '') {
+    
       this.makeRequest('/post');
+      this.refs.notes.value ='';
+      //this.setState({content: ''});
     } else {
       alert('Please write in the text field.');
     }
@@ -87,9 +92,9 @@ class Analyze extends React.Component {
     {console.log('HERE:' , this.state.emotion) }
     return (
     <div className='center'>
-      <textarea className='textArea' onChange={this.getTextVal.bind(this)}></textarea>
+      <textarea ref="notes" placeholder="Enter content here..." className='textArea' onChange={this.getTextVal.bind(this)}></textarea>
       <div>
-        <p>Positivity: {String(parseInt(this.state.score * 100)) + '%'}</p>
+        <p id='positivity'>Positivity: {String(parseInt(this.state.score * 100)) + '%'}</p>
         <EmotionElement emotionObj={this.state.emotion}/>
         <PersonaElement personaArr={this.state.persona}/>
        

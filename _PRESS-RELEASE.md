@@ -21,12 +21,14 @@ Once the project moves into development, the press release can be used as a touc
 
 ## Sub-Heading ##
   > Describe who the market for the product is and what benefit they get. One sentence only underneath the title.
+  >Allowing people to analyze the sentiment and the emotions behind their text. Gives the user the top 3 possible personality types based on the written content. If, for example, a student was reaching out to a recruiter, it would be very helpful for the student to understand the sentiments and personalities attached to the email that he/she is sending.
 
 ## Summary ##
   > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
 
 ## Problem ##
   > Describe the problem your product solves.
+  > People in the professional setting debating whether their email is friendly enough,
 
 ## Solution ##
   > Describe how your product elegantly solves the problem.
