@@ -1,7 +1,11 @@
 var mongoose = require('mongoose');
+var autoIncrement = require('mongoose-auto-increment');
+
 mongoose.connect('mongodb://localhost/test');
 
 var db = mongoose.connection;
+
+autoIncrement.initialize(db);
 
 db.on('error', function() {
   console.log('mongoose connection error');
@@ -17,6 +21,7 @@ var itemSchema = mongoose.Schema({
   date: String
 });
 
+itemSchema.plugin(autoIncrement.plugin, 'Item');
 var Item = mongoose.model('Item', itemSchema);
 
   // Item.save(); on an object instance
@@ -53,14 +58,22 @@ var save = function(content, data, callback) {
   });
 }
 
-var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
-    if(err) {
+var selectAll = function(callback, order) {
+  Item.find({}).sort({ _id: order }).exec(function (err, response) {
+    if (err) {
       callback(err, null);
     } else {
-      callback(null, items);
+      callback(null, response)
     }
   });
+
+  // Item.find({}, function(err, items) {
+  //   if(err) {
+  //     callback(err, null);
+  //   } else {
+  //     callback(null, items);
+  //   }
+  // });
 };
 
 module.exports.save = save;

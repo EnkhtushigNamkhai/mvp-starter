@@ -26,6 +26,17 @@ class App extends React.Component {
     }.bind(this));
   }
 
+  graphHandler() {
+    console.log('GRAPH HANDLER');
+
+    this.makeRequest('/graph', function (data) {
+      console.log('DATA FROM THE DATABASE: ', data);
+
+      this.setState({page: 'Graph', timeLine: JSON.parse(data)});
+
+    }.bind(this));
+  }
+
   analyzeNavHandler() {
     console.log('HANDLE THE Analyze HERE');
     this.setState({page: 'Analyze'});
@@ -60,7 +71,7 @@ class App extends React.Component {
       <h1>Text Analysis</h1>
       <div className='menu'>
         <span className='menuItem' onClick={this.timeLineNavHandler.bind(this)}>TimeLine</span>
-        <span className='menuItem'>Graph</span>
+        <span className='menuItem' onClick={this.graphHandler.bind(this)}>Graph</span>
         <span className='menuItem' onClick={this.analyzeNavHandler.bind(this)}>Analyze</span>
       </div>
  

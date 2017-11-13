@@ -56,7 +56,7 @@ app.post('/post', function (req, res) {
       console.log("NOOOO");
     } else {
 
-      
+
       //save the data to the database...
       //need to get the current date and save it to database too
       items.save(req.body.content, data);
@@ -74,9 +74,26 @@ app.get('/timeline', function (req, res) {
       console.log('ERROR READING FROM DATABASE');
     } else {
       console.log("success", data);
+//maybe sort
+
       res.end(JSON.stringify(data));
     }
-  });
+  }, -1);
+});
+
+app.get('/graph', function (req, res) {
+  console.log('REQUEST TO GRAPH FROM CLIENT');
+  //read from the database, and send it to the client
+  items.selectAll(function(err, data) {
+    if (err) {
+      console.log('ERROR READING FROM DATABASE');
+    } else {
+      console.log("success", data);
+//maybe sort
+
+      res.end(JSON.stringify(data));
+    }
+  }, 1);
 });
 
 app.get('/items', function (req, res) {
